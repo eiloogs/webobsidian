@@ -17,3 +17,11 @@ desktop/release/
 # Local agent runbooks/skills — may contain server creds; never commit.
 .claude/skills/
 report.md
+
+# 本地测试时在 Web UI 里产生的笔记——不进版本库（保留原始 4 个示例文件）
+sample-vault/Daily/
+sample-vault/测试/
+sample-vault/Untitled *.md
+sample-vault/Untitled *.canvas
+sample-vault/未命名.md
+sample-vault/未命名.canvas
