@@ -27,6 +27,12 @@ RUN npm install --omit=dev --workspace server
 COPY --from=build /app/server/dist ./server/dist
 COPY --from=build /app/server/public ./server/public
 
+# --- zh-cn 汉化补丁（本地维护，上游代码零改动）---
+# 构建后对编译产物做字符串替换；词条表在 i18n/zh-cn.json。
+# 删除下面两行即可回到纯上游英文版。
+COPY i18n ./i18n
+RUN node i18n/apply.mjs /app/server/public
+
 ENV PORT=8787 \
     HOST=0.0.0.0 \
     DATA_DIR=/data \
