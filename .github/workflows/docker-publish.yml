@@ -50,7 +50,8 @@ jobs:
         with:
           images: ${{ secrets.DOCKERHUB_USERNAME }}/webobsidian
           tags: |
-            type=raw,value=latest,enable={{is_default_branch}}
+            # zh-cn 是本 fork 的主线：push 到 zh-cn 或手动触发时打 latest
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/zh-cn' || github.event_name == 'workflow_dispatch' }}
             type=ref,event=tag
             type=sha,prefix=,format=short
 
