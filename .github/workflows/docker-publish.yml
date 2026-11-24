@@ -9,6 +9,8 @@ name: Build & push Docker image (zh-CN)
 #   - 打 tag（v*）——用于发布稳定版本，同时打 latest 与版本号 tag
 #   - 手动（workflow_dispatch）
 #
+# 架构：仅 linux/amd64（部署目标为 x86_64 NAS；多架构 QEMU 构建在本环境 push 阶段易挂起）
+#
 # 需要的 GitHub Secrets（Settings → Secrets and variables → Actions）：
 #   DOCKERHUB_USERNAME  —— Docker Hub 用户名（geeley）
 #   DOCKERHUB_TOKEN     —— Docker Hub Access Token（切勿明文写入仓库）
@@ -31,9 +33,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Set up QEMU (multi-arch)
-        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -60,7 +59,9 @@ jobs:
         with:
           context: .
           push: true
-          platforms: linux/amd64,linux/arm64
+          # 部署目标是 x86_64 NAS，只构建 amd64：
+          # 多架构(QEMU arm64)在本环境反复于 push 阶段挂起，单架构快且稳定
+          platforms: linux/amd64
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
